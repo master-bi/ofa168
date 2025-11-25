@@ -1,94 +1,396 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>正在為您導向最佳入口…</title>
-<meta name="robots" content="noindex, nofollow" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>正在為您連線官方入口...</title>
 
-<style>
-body {
-  margin: 0;
-  background: #0f172a;
-  color: #fff;
-  font-family: system-ui, -apple-system;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  text-align: center;
-}
-.box {
-  max-width: 320px;
-}
-.loader {
-  margin: 20px auto;
-  width: 40px;
-  height: 40px;
-  border: 4px solid rgba(255,255,255,0.3);
-  border-top-color: #fff;
-  border-radius: 50%;
-  animation: spin 0.9s linear infinite;
-}
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
-</style>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text",
+                   "Segoe UI", system-ui, sans-serif;
+    }
 
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle at top, #222 0, #050508 45%, #000 100%);
+      color: #f8f5ff;
+    }
+
+    .wrapper {
+      width: 100%;
+      max-width: 420px;
+      padding: 16px;
+    }
+
+    .card {
+      position: relative;
+      border-radius: 26px;
+      padding: 22px 20px 24px;
+      background: linear-gradient(145deg, #111119, #050508);
+      overflow: hidden;
+      box-shadow:
+        0 25px 60px rgba(0, 0, 0, 0.75),
+        0 0 0 1px rgba(255, 255, 255, 0.02);
+    }
+
+    /* 外框金色線條 */
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: -1px;
+      border-radius: 28px;
+      background:
+        linear-gradient(135deg, rgba(255, 215, 128, 0.35), transparent 40%),
+        linear-gradient(315deg, transparent 60%, rgba(255, 246, 196, 0.2));
+      opacity: 0.9;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    /* 背景科技線條 */
+    .card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        repeating-linear-gradient(
+          135deg,
+          rgba(255, 255, 255, 0.02) 0,
+          rgba(255, 255, 255, 0.02) 1px,
+          transparent 1px,
+          transparent 6px
+        );
+      mix-blend-mode: soft-light;
+      opacity: 0.7;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .logo-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .logo-dot {
+      width: 36px;
+      height: 36px;
+      border-radius: 12px;
+      background: radial-gradient(circle at 30% 30%, #fff, #111);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 18px;
+      color: #111;
+      box-shadow: 0 12px 20px rgba(0, 0, 0, 0.55);
+    }
+
+    .logo-text {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .logo-text-main {
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+    }
+
+    .logo-text-sub {
+      font-size: 12px;
+      opacity: 0.66;
+    }
+
+    .status {
+      margin-bottom: 16px;
+    }
+
+    .status-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .status-sub {
+      font-size: 13px;
+      opacity: 0.8;
+      line-height: 1.5;
+    }
+
+    /* Loader 區塊 */
+    .loader-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin: 22px 0 14px;
+    }
+
+    .spinner {
+      width: 28px;
+      height: 28px;
+      border-radius: 999px;
+      border: 2px solid rgba(255, 255, 255, 0.12);
+      border-top-color: #ffd66b;
+      border-right-color: #ffefba;
+      animation: spin 900ms linear infinite;
+      box-shadow: 0 0 15px rgba(255, 214, 107, 0.4);
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .loader-text {
+      font-size: 13px;
+      line-height: 1.5;
+      opacity: 0.9;
+    }
+
+    /* 進度條 */
+    .progress-bar {
+      position: relative;
+      width: 100%;
+      height: 8px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.06);
+      overflow: hidden;
+      margin-bottom: 10px;
+    }
+
+    .progress-inner {
+      position: absolute;
+      inset: 0;
+      transform-origin: left;
+      transform: scaleX(0);
+      background: linear-gradient(90deg, #ffdd82, #ffeebb, #fff);
+      box-shadow: 0 0 18px rgba(255, 214, 107, 0.65);
+      animation: progress-fill 5s ease-out forwards;
+    }
+
+    @keyframes progress-fill {
+      0%   { transform: scaleX(0.15); }
+      25%  { transform: scaleX(0.35); }
+      50%  { transform: scaleX(0.6); }
+      75%  { transform: scaleX(0.85); }
+      100% { transform: scaleX(1); }
+    }
+
+    .progress-label {
+      font-size: 12px;
+      opacity: 0.7;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .hint {
+      margin-top: 18px;
+      font-size: 12px;
+      opacity: 0.6;
+      line-height: 1.5;
+    }
+
+    .manual-btn {
+      margin-top: 18px;
+      width: 100%;
+      border-radius: 999px;
+      padding: 12px 16px;
+      border: none;
+      cursor: pointer;
+      background: radial-gradient(circle at 30% 0, #fff8d4, #ffcf61, #b78628);
+      color: #000;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      box-shadow:
+        0 12px 28px rgba(0, 0, 0, 0.7),
+        0 0 0 1px rgba(255, 255, 255, 0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .manual-btn span.icon {
+      font-size: 16px;
+    }
+
+    .manual-btn:active {
+      transform: translateY(1px);
+      box-shadow:
+        0 8px 18px rgba(0, 0, 0, 0.7),
+        0 0 0 1px rgba(255, 255, 255, 0.15);
+    }
+
+    @media (max-width: 480px) {
+      .card {
+        padding: 20px 18px 22px;
+      }
+      .logo-text-main {
+        font-size: 15px;
+      }
+    }
+  </style>
 </head>
 <body>
-<div class="box">
-  <h2>正在為您自動分流…</h2>
-  <p>請稍候 1–2 秒</p>
-  <div class="loader"></div>
-</div>
+  <div class="wrapper">
+    <div class="card">
+      <div class="logo-row">
+        <div class="logo-dot">XC</div>
+        <div class="logo-text">
+          <div class="logo-text-main">XC 官方跳轉中心</div>
+          <div class="logo-text-sub">為你連線最近且穩定的遊戲入口</div>
+        </div>
+      </div>
 
-<script>
-// === 你的各國入口（固定不會錯） ===
-const ENDPOINTS = {
-  tw: "https://ag223.gm89.net/login?id=register",
-  hk: "https://fbads.ds88hk.net/login?id=register",
-  my: "https://fbads.ofa168my.com/login?id=register",
-  kh: "https://fbads.ofa88kh.com/login?id=register",
-};
+      <div class="status">
+        <div class="status-title" id="statusTitle">正在為你偵測地區...</div>
+        <div class="status-sub" id="statusSub">
+          我們會依照你的 <strong>IP 地區與語系</strong>，
+          自動導向最近的 OFA168 官方註冊頁，請稍候數秒。
+        </div>
+      </div>
 
-// === 語言偵測 ===
-const lang = (navigator.language || "").toLowerCase();
+      <div class="loader-row">
+        <div class="spinner"></div>
+        <div class="loader-text" id="loaderText">
+          建立加密連線中，請保持網路穩定，不要關閉此視窗。
+        </div>
+      </div>
 
-// === IP / 國家偵測（需 Cloudflare，無則語言識別） ===
-async function detectCountry() {
-  try {
-    const res = await fetch("https://ipapi.co/json/");
-    const data = await res.json();
-    return data.country_code?.toLowerCase() || "";
-  } catch (e) {
-    return "";
-  }
-}
+      <div class="progress-bar">
+        <div class="progress-inner"></div>
+      </div>
+      <div class="progress-label">
+        <span>連線初始化</span>
+        <span id="progressHint">0%</span>
+      </div>
 
-function redirectTo(url) {
-  setTimeout(() => { window.location.href = url; }, 500);
-}
+      <div class="hint" id="hintText">
+        通常會在 <strong>3–6 秒內</strong>自動完成跳轉；
+        若超過 10 秒仍未跳轉，你可以點擊下方按鈕手動前往官方入口。
+      </div>
 
-(async () => {
-  let country = await detectCountry(); // e.g. "tw"
+      <button class="manual-btn" id="manualBtn" style="display:none;">
+        <span class="icon">↪</span>
+        <span id="manualBtnLabel">手動前往預設入口</span>
+      </button>
+    </div>
+  </div>
 
-  // --- 依國家導流 ---
-  if (country === "tw") return redirectTo(ENDPOINTS.tw);
-  if (country === "hk") return redirectTo(ENDPOINTS.hk);
-  if (country === "my") return redirectTo(ENDPOINTS.my);
-  if (country === "kh") return redirectTo(ENDPOINTS.kh);
+  <script>
+    // === 目的地設定 ===
+    const DESTS = {
+      TW: "https://ag223.gm89.net/login?id=register",
+      HK: "https://fbads.ds88hk.net/login?id=register",
+      MY: "https://fbads.ofa168my.com/login?id=register",
+      KH: "https://fbads.ofa88kh.com/login?id=register",
+    };
 
-  // --- fallback：語言導流 ---
-  if (lang.includes("zh") || lang.includes("tw")) return redirectTo(ENDPOINTS.tw);
-  if (lang.includes("hk") || lang.includes("yue")) return redirectTo(ENDPOINTS.hk);
-  if (lang.includes("ms")) return redirectTo(ENDPOINTS.my);
-  if (lang.includes("km")) return redirectTo(ENDPOINTS.kh);
+    const FALLBACK = DESTS.TW;
 
-  // --- 最後 fallback：台灣 ---
-  redirectTo(ENDPOINTS.tw);
-})();
-</script>
+    const statusTitle = document.getElementById("statusTitle");
+    const statusSub   = document.getElementById("statusSub");
+    const loaderText  = document.getElementById("loaderText");
+    const hintText    = document.getElementById("hintText");
+    const manualBtn   = document.getElementById("manualBtn");
+    const manualLabel = document.getElementById("manualBtnLabel");
+    const progressHint = document.getElementById("progressHint");
 
+    // 更新進度文字（只是視覺提示，不是真實百分比）
+    let fakeProgress = 0;
+    const progressTimer = setInterval(() => {
+      fakeProgress = Math.min(100, fakeProgress + 7);
+      progressHint.textContent = fakeProgress + "%";
+      if (fakeProgress >= 100) clearInterval(progressTimer);
+    }, 350);
+
+    function buildUrlWithParams(base) {
+      const qs = window.location.search;
+      if (!qs || qs === "?") return base;
+      return base + (base.includes("?") ? "&" : "?") + qs.substring(1);
+    }
+
+    function chooseByLanguage(defaultCode) {
+      const lang = (navigator.language || "").toLowerCase();
+      if (lang.includes("zh-hk") || lang.includes("zh-mo")) return "HK";
+      if (lang.includes("ms") || lang.includes("my"))       return "MY";
+      if (lang.includes("km"))                             return "KH";
+      if (lang.includes("zh-tw") || lang.includes("zh-hant")) return "TW";
+      return defaultCode;
+    }
+
+    function redirectTo(targetCode, reason) {
+      const base = DESTS[targetCode] || FALLBACK;
+      const url  = buildUrlWithParams(base);
+
+      statusTitle.textContent = "即將前往「" + targetCode + "」官方入口...";
+      loaderText.textContent  = "完成路由選擇（" + reason + "），正在帶你前往安全連線頁面。";
+      fakeProgress = 96;
+      progressHint.textContent = "96%";
+
+      setTimeout(() => { window.location.href = url; }, 600);
+    }
+
+    function showManual(targetCode) {
+      const base = DESTS[targetCode] || FALLBACK;
+      const url  = buildUrlWithParams(base);
+      manualLabel.textContent = "手動前往「" + targetCode + "」官方入口";
+      manualBtn.style.display = "flex";
+      manualBtn.onclick = () => { window.location.href = url; };
+    }
+
+    async function detectAndRedirect() {
+      let chosenCode = "TW";
+
+      try {
+        const res = await fetch("https://ipapi.co/json/");
+        const data = await res.json();
+        const cc   = (data.country || data.country_code || "").toUpperCase();
+
+        // 先用 IP 判斷國家
+        if (cc === "TW") chosenCode = "TW";
+        else if (cc === "HK") chosenCode = "HK";
+        else if (cc === "MY") chosenCode = "MY";
+        else if (cc === "KH") chosenCode = "KH";
+        else {
+          // 不在你四個國家裡，就用語系再判斷一次
+          chosenCode = chooseByLanguage("TW");
+        }
+
+        statusSub.textContent =
+          "已偵測到你的地區為「" + (data.country_name || cc || "未知地區") +
+          "」，正在為你選擇最適合的遊戲入口...";
+        redirectTo(chosenCode, "IP / 語系判斷");
+      } catch (err) {
+        console.error(err);
+        // API 掛掉時：只用語系判斷，最後 fallback TW
+        chosenCode = chooseByLanguage("TW");
+        statusTitle.textContent = "地區偵測服務暫時無法連線";
+        statusSub.textContent   = "將使用你的瀏覽器語系，為你選擇預設入口。";
+        loaderText.textContent  = "使用備援模式跳轉中，請稍候。";
+        setTimeout(() => redirectTo(chosenCode, "備援判斷"), 1200);
+      }
+
+      // 超過 8 秒仍未成功導轉時，顯示手動按鈕
+      setTimeout(() => {
+        showManual(chosenCode);
+        hintText.textContent =
+          "若畫面長時間停留在此頁，你可以點擊按鈕手動前往官方入口。";
+      }, 8000);
+    }
+
+    // 啟動
+    detectAndRedirect();
+  </script>
 </body>
 </html>
