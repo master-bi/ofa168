@@ -38,6 +38,7 @@
       box-shadow:
         0 25px 60px rgba(0, 0, 0, 0.8),
         0 0 0 1px rgba(255, 255, 255, 0.03);
+      isolation: isolate;
     }
 
     /* 外框金色線條 */
@@ -51,10 +52,10 @@
         linear-gradient(315deg, transparent 60%, rgba(255, 246, 196, 0.28));
       opacity: 0.95;
       pointer-events: none;
-      z-index: -1;
+      z-index: -2;
     }
 
-    /* 背景科技線條 */
+    /* 背景細格線 */
     .card::after {
       content: "";
       position: absolute;
@@ -70,14 +71,34 @@
       mix-blend-mode: soft-light;
       opacity: 0.7;
       pointer-events: none;
+      z-index: -2;
+    }
+
+    /* 發光掃描線 */
+    .scan-line {
+      position: absolute;
+      inset: -40%;
+      background: radial-gradient(circle at 0 50%,
+                  rgba(255, 235, 175, 0.03) 0,
+                  transparent 55%);
+      mix-blend-mode: screen;
+      animation: scan-move 4.5s linear infinite;
       z-index: -1;
+      pointer-events: none;
+    }
+
+    @keyframes scan-move {
+      0%   { transform: translateX(-40%) skewX(-18deg); opacity: 0.0; }
+      20%  { opacity: 0.9; }
+      60%  { opacity: 0.9; }
+      100% { transform: translateX(60%) skewX(-18deg); opacity: 0; }
     }
 
     .logo-row {
       display: flex;
       align-items: center;
       gap: 12px;
-      margin-bottom: 18px;
+      margin-bottom: 14px;
     }
 
     .logo-dot {
@@ -91,7 +112,22 @@
       font-weight: 700;
       font-size: 18px;
       color: #111;
-      box-shadow: 0 12px 22px rgba(0, 0, 0, 0.7);
+      box-shadow: 0 12px 22px rgba(0, 0, 0, 0.7),
+                  0 0 18px rgba(255, 222, 150, 0.75);
+      animation: logo-pulse 2.4s ease-in-out infinite;
+    }
+
+    @keyframes logo-pulse {
+      0%, 100% {
+        transform: translateY(0) scale(1);
+        box-shadow: 0 12px 22px rgba(0, 0, 0, 0.7),
+                    0 0 12px rgba(255, 222, 150, 0.45);
+      }
+      50% {
+        transform: translateY(-2px) scale(1.04);
+        box-shadow: 0 16px 28px rgba(0, 0, 0, 0.9),
+                    0 0 24px rgba(255, 243, 194, 0.9);
+      }
     }
 
     .logo-text {
@@ -111,8 +147,31 @@
       opacity: 0.7;
     }
 
+    .region-pill {
+      margin-top: 6px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      background: linear-gradient(135deg, rgba(255, 226, 150, 0.16), rgba(255, 255, 255, 0.02));
+      box-shadow: 0 0 0 1px rgba(255, 224, 158, 0.35),
+                  0 0 12px rgba(255, 204, 102, 0.45);
+      color: #ffefc4;
+    }
+
+    .region-pill-flag {
+      font-size: 14px;
+    }
+
+    .region-pill-reason {
+      opacity: .8;
+    }
+
     .status {
       margin-bottom: 16px;
+      margin-top: 6px;
     }
 
     .status-title {
@@ -244,11 +303,18 @@
 <body>
   <div class="wrapper">
     <div class="card">
+      <div class="scan-line"></div>
+
       <div class="logo-row">
         <div class="logo-dot">XC</div>
         <div class="logo-text">
           <div class="logo-text-main">XC 官方跳轉中心</div>
           <div class="logo-text-sub">為你連線最近且穩定的遊戲入口</div>
+          <div class="region-pill" id="regionPill" style="display:none;">
+            <span class="region-pill-flag" id="regionFlag">🌐</span>
+            <span id="regionLabel">預設節點</span>
+            <span class="region-pill-reason" id="regionReason">偵測中...</span>
+          </div>
         </div>
       </div>
 
@@ -296,16 +362,21 @@
       KH: "https://fbads.ofa88kh.com/login?id=register",
     };
 
-    // 沒有匹配到時的預設備援（可以改）
+    // 沒有匹配到時的預設備援
     const FALLBACK = DESTS.TW;
 
-    const statusTitle = document.getElementById("statusTitle");
-    const statusSub   = document.getElementById("statusSub");
-    const loaderText  = document.getElementById("loaderText");
-    const hintText    = document.getElementById("hintText");
-    const manualBtn   = document.getElementById("manualBtn");
-    const manualLabel = document.getElementById("manualBtnLabel");
+    const statusTitle  = document.getElementById("statusTitle");
+    const statusSub    = document.getElementById("statusSub");
+    const loaderText   = document.getElementById("loaderText");
+    const hintText     = document.getElementById("hintText");
+    const manualBtn    = document.getElementById("manualBtn");
+    const manualLabel  = document.getElementById("manualBtnLabel");
     const progressHint = document.getElementById("progressHint");
+
+    const regionPill   = document.getElementById("regionPill");
+    const regionFlag   = document.getElementById("regionFlag");
+    const regionLabel  = document.getElementById("regionLabel");
+    const regionReason = document.getElementById("regionReason");
 
     // 假進度條數字，只是視覺提示
     let fakeProgress = 0;
@@ -320,6 +391,22 @@
       const qs = window.location.search;
       if (!qs || qs === "?") return base;
       return base + (base.includes("?") ? "&" : "?") + qs.substring(1);
+    }
+
+    // 顯示偵測到的節點 + 國旗
+    function updateRegionPill(code, byText, countryNameFallback) {
+      const map = {
+        TW: {flag:"🇹🇼", label:"台灣節點"},
+        HK: {flag:"🇭🇰", label:"香港節點"},
+        MY: {flag:"🇲🇾", label:"馬來西亞節點"},
+        KH: {flag:"🇰🇭", label:"柬埔寨節點"},
+      };
+      const info = map[code] || {flag:"🌐", label: countryNameFallback || "預設節點"};
+
+      regionFlag.textContent  = info.flag;
+      regionLabel.textContent = info.label;
+      regionReason.textContent = byText;
+      regionPill.style.display = "inline-flex";
     }
 
     // 語系判斷備援
@@ -389,9 +476,13 @@
           chosenCode = chooseByLanguage("TW");
         }
 
+        const countryName = data.country_name || cc || "未知地區";
+
         statusSub.textContent =
-          "已偵測到你的地區為「" + (data.country_name || cc || "未知地區") +
+          "已偵測到你的地區為「" + countryName +
           "」，正在為你選擇最適合的遊戲入口...";
+        updateRegionPill(chosenCode, "依 IP / 語系判斷", countryName);
+
         redirectTo(chosenCode, "IP / 語系判斷");
       } catch (err) {
         console.error(err);
@@ -401,6 +492,8 @@
         statusTitle.textContent = "地區偵測服務暫時無法連線";
         statusSub.textContent   = "將使用你的瀏覽器語系，為你選擇預設入口。";
         loaderText.textContent  = "使用備援模式跳轉中，請稍候。";
+
+        updateRegionPill(chosenCode, "備援模式判斷");
 
         setTimeout(() => {
           redirectTo(chosenCode, "備援判斷");
