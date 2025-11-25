@@ -19,7 +19,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      background: radial-gradient(circle at top, #222 0, #050508 45%, #000 100%);
+      background: radial-gradient(circle at top, #202127 0, #050508 45%, #000 100%);
       color: #f8f5ff;
     }
 
@@ -33,11 +33,11 @@
       position: relative;
       border-radius: 26px;
       padding: 22px 20px 24px;
-      background: linear-gradient(145deg, #111119, #050508);
+      background: linear-gradient(145deg, #141520, #050509);
       overflow: hidden;
       box-shadow:
-        0 25px 60px rgba(0, 0, 0, 0.75),
-        0 0 0 1px rgba(255, 255, 255, 0.02);
+        0 25px 60px rgba(0, 0, 0, 0.8),
+        0 0 0 1px rgba(255, 255, 255, 0.03);
     }
 
     /* 外框金色線條 */
@@ -47,9 +47,9 @@
       inset: -1px;
       border-radius: 28px;
       background:
-        linear-gradient(135deg, rgba(255, 215, 128, 0.35), transparent 40%),
-        linear-gradient(315deg, transparent 60%, rgba(255, 246, 196, 0.2));
-      opacity: 0.9;
+        linear-gradient(135deg, rgba(255, 215, 128, 0.45), transparent 40%),
+        linear-gradient(315deg, transparent 60%, rgba(255, 246, 196, 0.28));
+      opacity: 0.95;
       pointer-events: none;
       z-index: -1;
     }
@@ -84,14 +84,14 @@
       width: 36px;
       height: 36px;
       border-radius: 12px;
-      background: radial-gradient(circle at 30% 30%, #fff, #111);
+      background: radial-gradient(circle at 30% 30%, #fff, #c5c5c5);
       display: flex;
       align-items: center;
       justify-content: center;
       font-weight: 700;
       font-size: 18px;
       color: #111;
-      box-shadow: 0 12px 20px rgba(0, 0, 0, 0.55);
+      box-shadow: 0 12px 22px rgba(0, 0, 0, 0.7);
     }
 
     .logo-text {
@@ -108,7 +108,7 @@
 
     .logo-text-sub {
       font-size: 12px;
-      opacity: 0.66;
+      opacity: 0.7;
     }
 
     .status {
@@ -123,7 +123,7 @@
 
     .status-sub {
       font-size: 13px;
-      opacity: 0.8;
+      opacity: 0.85;
       line-height: 1.5;
     }
 
@@ -143,7 +143,7 @@
       border-top-color: #ffd66b;
       border-right-color: #ffefba;
       animation: spin 900ms linear infinite;
-      box-shadow: 0 0 15px rgba(255, 214, 107, 0.4);
+      box-shadow: 0 0 18px rgba(255, 214, 107, 0.5);
     }
 
     @keyframes spin {
@@ -153,7 +153,7 @@
     .loader-text {
       font-size: 13px;
       line-height: 1.5;
-      opacity: 0.9;
+      opacity: 0.95;
     }
 
     /* 進度條 */
@@ -162,7 +162,7 @@
       width: 100%;
       height: 8px;
       border-radius: 999px;
-      background: rgba(255, 255, 255, 0.06);
+      background: rgba(255, 255, 255, 0.08);
       overflow: hidden;
       margin-bottom: 10px;
     }
@@ -172,16 +172,16 @@
       inset: 0;
       transform-origin: left;
       transform: scaleX(0);
-      background: linear-gradient(90deg, #ffdd82, #ffeebb, #fff);
-      box-shadow: 0 0 18px rgba(255, 214, 107, 0.65);
+      background: linear-gradient(90deg, #ffdd82, #ffeebb, #ffffff);
+      box-shadow: 0 0 18px rgba(255, 214, 107, 0.7);
       animation: progress-fill 5s ease-out forwards;
     }
 
     @keyframes progress-fill {
-      0%   { transform: scaleX(0.15); }
-      25%  { transform: scaleX(0.35); }
-      50%  { transform: scaleX(0.6); }
-      75%  { transform: scaleX(0.85); }
+      0%   { transform: scaleX(0.18); }
+      25%  { transform: scaleX(0.4); }
+      50%  { transform: scaleX(0.65); }
+      75%  { transform: scaleX(0.9); }
       100% { transform: scaleX(1); }
     }
 
@@ -195,7 +195,7 @@
     .hint {
       margin-top: 18px;
       font-size: 12px;
-      opacity: 0.6;
+      opacity: 0.63;
       line-height: 1.5;
     }
 
@@ -210,9 +210,9 @@
       color: #000;
       font-size: 14px;
       font-weight: 600;
-      letter-spacing: 0.05em;
+      letter-spacing: 0.06em;
       box-shadow:
-        0 12px 28px rgba(0, 0, 0, 0.7),
+        0 12px 28px rgba(0, 0, 0, 0.8),
         0 0 0 1px rgba(255, 255, 255, 0.15);
       display: flex;
       align-items: center;
@@ -227,7 +227,7 @@
     .manual-btn:active {
       transform: translateY(1px);
       box-shadow:
-        0 8px 18px rgba(0, 0, 0, 0.7),
+        0 9px 20px rgba(0, 0, 0, 0.8),
         0 0 0 1px rgba(255, 255, 255, 0.15);
     }
 
@@ -276,7 +276,7 @@
       </div>
 
       <div class="hint" id="hintText">
-        通常會在 <strong>3–6 秒內</strong>自動完成跳轉；
+        通常會在 <strong>3–6 秒內</strong> 自動完成跳轉；
         若超過 10 秒仍未跳轉，你可以點擊下方按鈕手動前往官方入口。
       </div>
 
@@ -288,7 +288,7 @@
   </div>
 
   <script>
-    // === 目的地設定 ===
+    // === 目的地設定：依國家代碼分流 ===
     const DESTS = {
       TW: "https://ag223.gm89.net/login?id=register",
       HK: "https://fbads.ds88hk.net/login?id=register",
@@ -296,6 +296,7 @@
       KH: "https://fbads.ofa88kh.com/login?id=register",
     };
 
+    // 沒有匹配到時的預設備援（可以改）
     const FALLBACK = DESTS.TW;
 
     const statusTitle = document.getElementById("statusTitle");
@@ -306,7 +307,7 @@
     const manualLabel = document.getElementById("manualBtnLabel");
     const progressHint = document.getElementById("progressHint");
 
-    // 更新進度文字（只是視覺提示，不是真實百分比）
+    // 假進度條數字，只是視覺提示
     let fakeProgress = 0;
     const progressTimer = setInterval(() => {
       fakeProgress = Math.min(100, fakeProgress + 7);
@@ -314,18 +315,22 @@
       if (fakeProgress >= 100) clearInterval(progressTimer);
     }, 350);
 
+    // 把原本網址上的 query string 一起帶到目標網址
     function buildUrlWithParams(base) {
       const qs = window.location.search;
       if (!qs || qs === "?") return base;
       return base + (base.includes("?") ? "&" : "?") + qs.substring(1);
     }
 
+    // 語系判斷備援
     function chooseByLanguage(defaultCode) {
       const lang = (navigator.language || "").toLowerCase();
+
       if (lang.includes("zh-hk") || lang.includes("zh-mo")) return "HK";
       if (lang.includes("ms") || lang.includes("my"))       return "MY";
       if (lang.includes("km"))                             return "KH";
       if (lang.includes("zh-tw") || lang.includes("zh-hant")) return "TW";
+
       return defaultCode;
     }
 
@@ -338,32 +343,49 @@
       fakeProgress = 96;
       progressHint.textContent = "96%";
 
-      setTimeout(() => { window.location.href = url; }, 600);
+      setTimeout(() => {
+        window.location.href = url;
+      }, 600);
     }
 
     function showManual(targetCode) {
       const base = DESTS[targetCode] || FALLBACK;
       const url  = buildUrlWithParams(base);
+
       manualLabel.textContent = "手動前往「" + targetCode + "」官方入口";
       manualBtn.style.display = "flex";
-      manualBtn.onclick = () => { window.location.href = url; };
+      manualBtn.onclick = () => {
+        window.location.href = url;
+      };
+    }
+
+    // fetch 加 timeout，避免卡死
+    function fetchWithTimeout(resource, options = {}) {
+      const { timeout = 3000 } = options;
+
+      return Promise.race([
+        fetch(resource, options),
+        new Promise((_, reject) =>
+          setTimeout(() => reject(new Error("timeout")), timeout)
+        )
+      ]);
     }
 
     async function detectAndRedirect() {
       let chosenCode = "TW";
 
       try {
-        const res = await fetch("https://ipapi.co/json/");
+        const res = await fetchWithTimeout("https://ipapi.co/json/", { timeout: 3000 });
         const data = await res.json();
         const cc   = (data.country || data.country_code || "").toUpperCase();
 
-        // 先用 IP 判斷國家
+        // 先看 IP 國家
         if (cc === "TW") chosenCode = "TW";
         else if (cc === "HK") chosenCode = "HK";
         else if (cc === "MY") chosenCode = "MY";
         else if (cc === "KH") chosenCode = "KH";
         else {
-          // 不在你四個國家裡，就用語系再判斷一次
+          // 不在四個國家的話，用語系判斷
           chosenCode = chooseByLanguage("TW");
         }
 
@@ -373,15 +395,19 @@
         redirectTo(chosenCode, "IP / 語系判斷");
       } catch (err) {
         console.error(err);
-        // API 掛掉時：只用語系判斷，最後 fallback TW
+
+        // API 掛掉或 timeout：只用語系判斷，最後 fallback TW
         chosenCode = chooseByLanguage("TW");
         statusTitle.textContent = "地區偵測服務暫時無法連線";
         statusSub.textContent   = "將使用你的瀏覽器語系，為你選擇預設入口。";
         loaderText.textContent  = "使用備援模式跳轉中，請稍候。";
-        setTimeout(() => redirectTo(chosenCode, "備援判斷"), 1200);
+
+        setTimeout(() => {
+          redirectTo(chosenCode, "備援判斷");
+        }, 1200);
       }
 
-      // 超過 8 秒仍未成功導轉時，顯示手動按鈕
+      // 超過 8 秒還沒跳轉，就顯示手動按鈕
       setTimeout(() => {
         showManual(chosenCode);
         hintText.textContent =
@@ -389,7 +415,6 @@
       }, 8000);
     }
 
-    // 啟動
     detectAndRedirect();
   </script>
 </body>
